@@ -20,10 +20,11 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/editText"
+        android:id="@+id/region_editText"
         android:layout_alignTop="@+id/textView"
         android:layout_alignParentEnd="true"
-        android:layout_toEndOf="@+id/textView2" />
+        android:layout_toEndOf="@+id/textView2"
+        android:editable="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -38,17 +39,18 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/editText2"
-        android:layout_below="@+id/editText"
+        android:id="@+id/dest_editText"
+        android:layout_below="@+id/region_editText"
         android:layout_alignParentEnd="true"
         android:layout_toEndOf="@+id/textView2"
-        android:layout_alignStart="@+id/editText" />
+        android:layout_alignStart="@+id/region_editText"
+        android:editable="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/search"
-        android:id="@+id/button"
+        android:id="@+id/search_btn"
         android:layout_below="@+id/textView2"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="69dp"
