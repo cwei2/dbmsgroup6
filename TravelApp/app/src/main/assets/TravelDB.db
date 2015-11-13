@@ -1,0 +1,271 @@
+.echo ON
+
+.mode list
+.separator "|"
+
+.output Group6_project_database_out.txt
+
+PRAGMA foreign_keys = ON;
+
+DROP TABLE IF EXISTS TRAVEL_INFO;
+DROP TABLE IF EXISTS TRANSPORT;
+DROP TABLE IF EXISTS CUST_RATING;
+DROP TABLE IF EXISTS RESTAURANT;
+DROP TABLE IF EXISTS ENTERTAINMENT;
+DROP TABLE IF EXISTS HOTEL;
+DROP TABLE IF EXISTS EMERGENCY;
+DROP TABLE IF EXISTS UNI_TYPE;
+DROP TABLE IF EXISTS DESTINATION;
+DROP TABLE IF EXISTS REGION;
+
+
+CREATE TABLE REGION (
+	reg_id CHAR(3) NOT NULL CONSTRAINT REGION_reg_id_pk PRIMARY KEY,
+	reg_name VARCHAR(15) NOT NULL
+);
+
+
+CREATE TABLE UNI_TYPE (
+	uni_id CHAR(3) , 
+	uni_type CHAR(1) ,
+	uni_name VARCHAR(15),
+    uni_hour VARCHAR(15),
+	uni_addr VARCHAR(20),
+	uni_contact VARCHAR(10),
+    uni_desc VARCHAR(10),
+    dest_id CHAR(3),
+    CONSTRAINT uni_id_pk PRIMARY KEY (uni_id),
+    CONSTRAINT destination_uni_type_id_fk FOREIGN KEY (dest_id) REFERENCES DESTINATION(dest_id)
+);
+
+
+CREATE TABLE DESTINATION (
+	dest_id CHAR(3) NOT NULL CONSTRAINT destination_dest_id_pk PRIMARY KEY,
+	dest_name VARCHAR(15) NOT NULL,
+	reg_id CHAR(3) NOT NULL,
+	CONSTRAINT destination_reg_id_fk FOREIGN KEY (reg_id) REFERENCES REGION(reg_id)
+);
+
+
+CREATE TABLE HOTEL (
+	uni_id CHAR(4) NOT NULL CONSTRAINT hotel_uni_id_pk PRIMARY KEY, 
+	hotel_type VARCHAR(10)
+);
+
+CREATE TABLE ENTERTAINMENT (
+	uni_id CHAR(4) NOT NULL CONSTRAINT entertainment_uni_id_pk PRIMARY KEY, 
+	enter_type VARCHAR(10),
+    enter_admission_fee INTEGER
+);
+
+CREATE TABLE RESTAURANT (
+	uni_id CHAR(4) NOT NULL CONSTRAINT RESTAURANT_uni_id_pk PRIMARY KEY, 
+	rest_type VARCHAR(10),
+    rest_happy_hours VARCHAR(15)
+);
+
+
+CREATE TABLE EMERGENCY (
+	emer_id CHAR(4) NOT NULL CONSTRAINT emergency_emer_id_pk PRIMARY KEY,
+	emer_name VARCHAR(15) NOT NULL,
+	emer_addr VARCHAR(50) NOT NULL,
+	emer_contact NUMBER(10) NOT NULL,
+	dest_id CHAR(3) NOT NULL,
+	CONSTRAINT emergency_dest_id_fk FOREIGN KEY (dest_id) REFERENCES DESTINATION(dest_id)
+);
+
+
+
+CREATE TABLE CUST_RATING (
+	rat_id CHAR(5) NOT NULL CONSTRAINT cust_rating_rat_id_pk PRIMARY KEY, 
+	rating INTEGER,
+	review VARCHAR(20),
+	uni_id CHAR(4) NOT NULL,
+	CONSTRAINT cust_rating_uni_id_fk FOREIGN KEY (uni_id) REFERENCES UNI_TYPE(uni_id)
+);
+
+
+
+
+
+CREATE TABLE TRAVEL_INFO (
+	travel_id CHAR(3) NOT NULL CONSTRAINT travel_info_id_pk PRIMARY KEY, 
+	travel_dist VARCHAR(10),
+	travel_time VARCHAR(10),
+	travel_price INTEGER(3,2),
+	uni_id CHAR(3) NOT NULL,
+    trans_id CHAR(3) NOT NULL,
+	CONSTRAINT travel_info_uni_id_fk FOREIGN KEY (uni_id) REFERENCES UNI_TYPE(uni_id),
+    CONSTRAINT travel_info_trans_id_fk FOREIGN KEY (trans_id) REFERENCES TRANSPORT(trans_id) 
+);
+
+
+
+CREATE TABLE TRANSPORT (
+	trans_id CHAR(3) NOT NULL CONSTRAINT transport_trans_id_pk PRIMARY KEY, 
+	trans_type VARCHAR(10),
+	start_point VARCHAR(10),
+	dest_id CHAR(3) NOT NULL, 
+	CONSTRAINT transport_dest_id_fk FOREIGN KEY (dest_id) REFERENCES DESTINATION(dest_id)
+);
+
+--Inserting SQLite data
+
+INSERT INTO REGION	 VALUES ('001','MASSACHUSETTS');
+INSERT INTO REGION	 VALUES ('002','CALIFORNIA');
+
+
+INSERT INTO DESTINATION 	VALUES ('101','Boston','001');
+INSERT INTO DESTINATION 	VALUES ('201','Los Angeles','002');
+
+
+INSERT INTO UNI_TYPE 	VALUES ('r101','r',"Sam LaGrassa's",'11am-1am','44 Province St, Boston, MA 02108','+16173576861','description','101');
+INSERT INTO UNI_TYPE 	VALUES ('r102','r',"Casa Razdora",'8am-12am','115 Water St, Boston, MA 02109-4823','+1 617-338-6700','description','101');
+INSERT INTO UNI_TYPE 	VALUES ('r103','r',"Mario's Restaurant ",'7am-11pm','347 Chelsea St, Boston, MA 02128-1480','+16173576861','description','101');
+INSERT INTO UNI_TYPE 	VALUES ('r201','r',"Pitchoun!",'9am-12am','545 S Olive St, Los Angeles, CA 90013','+12136893240','description','201');
+INSERT INTO UNI_TYPE 	VALUES ('r202','r',"Si Laa Thai",'11am-1am','1128 S Robertson Blvd, Los Angeles, CA 90035-1404','+1310-858-7738','description','201');
+INSERT INTO UNI_TYPE 	VALUES ('r203','r',"The Griddle Cafe",'11am-11pm','7916 Sunset Blvd, Los Angeles, CA 90046-3304','+1 323-874-0377','description','201');
+INSERT INTO UNI_TYPE 	VALUES ('h101','h',"Lenox Hotel",'6am-2am',' 61 Exeter Street at Boylston, Boston, MA 02116-2699','+1 844-325-1276','description','101');
+INSERT INTO UNI_TYPE 	VALUES ('h102','h',"Boston Harbor Hotel",'7am-10pm','70 Rowes Wharf, Boston, MA 02110','+1 617-488-9577','description','101');
+INSERT INTO UNI_TYPE 	VALUES ('h103','h',"Seaport Boston Hotel",'8am-8pm',' 1 Seaport Lane, Boston, MA 02210','+1 857-263-3756','description','101');
+INSERT INTO UNI_TYPE 	VALUES ('h201','h',"Loews Hollywood Hotel",'7am-1am','1755 N Highland Ave, Hollywood, Los Angeles, CA 90028','+1 844-329-5887','description','201');
+INSERT INTO UNI_TYPE 	VALUES ('h202','h',"The Garland",'8am-11pm',' 4222 Vineland Avenue, Los Angeles, CA 91602','+1 818-479-3080','description','201');
+INSERT INTO UNI_TYPE 	VALUES ('h203','h',"Omni Los Angeles at California Plaza",'7am-10pm','251 S Olive St, Los Angeles, CA 90012','+1 800-578-2900','description','201');
+INSERT INTO UNI_TYPE 	VALUES ('e101','e',"Museum of Fine Arts",'9:00am-9:00pm','465 Huntington Ave, Avenue of the Arts, Boston, MA 02115-5597','+1 617-267-9300','description','101');
+INSERT INTO UNI_TYPE 	VALUES ('e102','e',"Fenway Park",'12:00pm-12:00am','4 Yawkey Way, Boston, MA 02215','+1 617-267-1700','description','101');
+INSERT INTO UNI_TYPE 	VALUES ('e103','e',"Freedom Trail",'10:00am-6:00pm','Boston, MA 02109','+1 617-357-8300','description','101');
+INSERT INTO UNI_TYPE 	VALUES ('e201','e',"Universal Studios Hollywood",'9:30am-10:30pm','100 Universal City Plaza, Los Angeles, CA 91608','+1 800-864-8377','description','201');
+INSERT INTO UNI_TYPE 	VALUES ('e202','e',"The Getty Center",'3:00pm-5:00pm','1200 Getty Center Dr, Los Angeles, CA 90049','+1 310-440-7300','description','201');
+INSERT INTO UNI_TYPE 	VALUES ('e203','e',"California Science Center",'8:30am-4:30pm','700 Exposition Park Drive, Los Angeles, CA 90037','+1 323-724-3623','description','201');
+
+
+
+
+INSERT INTO HOTEL 	VALUES ('1101','Chinese');
+INSERT INTO HOTEL 	VALUES ('1102','Mexican');
+INSERT INTO HOTEL 	VALUES ('1103','Lebanese');
+INSERT INTO HOTEL 	VALUES ('1201','Indian');
+INSERT INTO HOTEL 	VALUES ('1202','Thai');
+INSERT INTO HOTEL 	VALUES ('1203','American');
+
+
+INSERT INTO ENTERTAINMENT 	VALUES ('1101','Exhibition',10);
+INSERT INTO ENTERTAINMENT 	VALUES ('1102','Park',0);
+INSERT INTO ENTERTAINMENT 	VALUES ('1103','Historic Place',0);
+INSERT INTO ENTERTAINMENT 	VALUES ('1201','Entertainment Park',13);
+INSERT INTO ENTERTAINMENT 	VALUES ('1202','Activity',7);
+INSERT INTO ENTERTAINMENT 	VALUES ('1203','Exhibition',5);
+
+
+INSERT INTO RESTAURANT 	VALUES ('1101','Barbecue','6:30pm-8pm');
+INSERT INTO RESTAURANT 	VALUES ('1102','Cafe','7pm-8pm');
+INSERT INTO RESTAURANT 	VALUES ('1103','Fast Food','None');
+INSERT INTO RESTAURANT 	VALUES ('1201','Barbecue','5pm-7pm');
+INSERT INTO RESTAURANT 	VALUES ('1202','Pub','9pm-10:30pm');
+INSERT INTO RESTAURANT 	VALUES ('1203','Cafe','11am-1pm');
+
+
+INSERT INTO EMERGENCY 	VALUES ('1101','Massachusetts General Hospital',"55 Fruit St, Boston, MA 02114","(617)726-2000",'101');
+INSERT INTO EMERGENCY 	VALUES ('1102','State Police Association',"11 Beacon St, Boston, MA 02108","(617)523-0130",'101');
+INSERT INTO EMERGENCY 	VALUES ('1201','Wilshire Community Police Station',"4861 Venice Blvd, Los Angeles, CA 90019","(213)473-0476",'201');
+INSERT INTO EMERGENCY 	VALUES ('1103','Boston City Fire Department',"941 Boylston St, Boston, MA 02115","(617)343-2880",'101');
+INSERT INTO EMERGENCY 	VALUES ('1202','State Police Association',"4861 Venice Blvd, Los Angeles, CA 90019","(213)473-0476",'201');
+
+
+INSERT INTO CUST_RATING   VALUES ('00001',5,"We had a great time. Check-in was so quick we couldn't believe it. Arrived before noon and was in the room by 12:30. Checked in for the slot tournament and we were ready to go. The buffet was excellent but the highlight was having dinner in the Prime Rib Loft. The food was fantastic and the service superb. Can't wait to come back.",'h101');
+INSERT INTO CUST_RATING	  VALUES ('00002',4,"",'r103');
+INSERT INTO CUST_RATING   VALUES ('00003',4,"",'r201');
+INSERT INTO CUST_RATING   VALUES ('00004',4,"",'e203');
+INSERT INTO CUST_RATING   VALUES ('00005',4,"",'r202');
+INSERT INTO CUST_RATING   VALUES ('00006',4,"We have stayed here before over the past 20 years. We have also stayed on the strip and stayed at newer, upscale hotels. We like The Orleans for the nice rooms (always updated) and the buffet...which has Great Prime Rib! Not on the strip but their shuttle bus will take you there ... and back. No negatives in our opinions!",'h102');
+INSERT INTO CUST_RATING   VALUES ('00007',4,"",'r101');
+INSERT INTO CUST_RATING	  VALUES ('00008',4,"",'r103');
+INSERT INTO CUST_RATING	  VALUES ('00009',4,"",'e203');
+INSERT INTO CUST_RATING	  VALUES ('00010',5,"The property is right by downtown amidst all of the historical sites and entertainment. The team was amazing and the check-in and out processes were seamless. When we first arrived at 9 am, our room wasn't ready, but our bags were taken, coffee and tea were offered, and a map of the city was provided to us. We received a phone call about noon informing us our room was ready. We returned to the hotel at 5 pm, happy hour! Our bags were taken to our room and we enjoyed a glass of red wine. The team was exceptional and the room was extremely clean.",'h203');
+INSERT INTO CUST_RATING	  VALUES ('00011',4,"Outstanding experience at Boston harbor hotel great service and the location is very central to all attractions and harbor fun spots...convenient to Starbucks as well...easy walk to freedom trail walk which is a must do be careful with elders that have issues getting around the cobble streets and narrow sidewalk paths can be make it difficult...but no reason to skip",'h101');
+INSERT INTO CUST_RATING	  VALUES ('00012',4,"",'e102');
+INSERT INTO CUST_RATING	  VALUES ('00013',4,"",'r203');
+INSERT INTO CUST_RATING	  VALUES ('00014',4,"",'r103');
+INSERT INTO CUST_RATING	  VALUES ('00015',4,"",'e203');
+INSERT INTO CUST_RATING	  VALUES ('00016',5,"My husband and I recently stayed here, and I have to say that the rooms here are exceptional. Very clean and spacious. Was very impressed with everything this hotel and casino have to offer. The staff were very friendly and helpful as well. Love this place. Would definitely stay here again.",'h202');
+INSERT INTO CUST_RATING	  VALUES ('00017',5,"My wife and myself stayed here the first week in October after flying into Boston to rent a car and drive thru New England to watch the leaves.We stayed one night in a harbor view room for $566/night. A little expensive but a great view of the harbor and a great location in downtown Boston next to restaurants and activities. We took a taxi to the hotel which I would recommend or you could take a subway from the airport. I would never advise driving in downtown Boston. We rented a car from Enterprise in downtown which they brought to us the next day at 1/2 the price we could have rented at the airport. Parking is $45/day and traffic is awful. The service was excellent from the front desk to the bellmen. We only ate breakfast there as dining was a little expensive and we wanted to walk around a bit. Breakfast buffet was $30 but was excellent. The room was nice but had a small king which I call 'a New York king bed.' I understand they have concerts outside in the summer which would be nice. I would definitely stay here again.",'h201');
+INSERT INTO CUST_RATING	  VALUES ('00018',4,"",'e102');
+INSERT INTO CUST_RATING	  VALUES ('00019',4,"",'r203');
+INSERT INTO CUST_RATING	  VALUES ('00020',4,"",'r102');
+INSERT INTO CUST_RATING	  VALUES ('00021',4,"",'e103');
+INSERT INTO CUST_RATING	  VALUES ('00022',5,"We almost always look for botique type hotels when attending conferences as ig hotels tend to lack any personal service. The Z Nine Zero was very nice. Good transportation. Rooms large and we'll appointed. Room service food was great as we ordered breakfast daily as we had early meetings. Staff was very accommodating with bags and late checkout. Lovely retro decor and nice enough wine reception each evening in the lobby. Highly recommended.",'h102');
+INSERT INTO CUST_RATING	  VALUES ('00023',4,"",'e101');
+INSERT INTO CUST_RATING	  VALUES ('00024',4,"",'e203');
+INSERT INTO CUST_RATING	  VALUES ('00025',2,"We stayed in a two-Queen room, and on the second night we slept with our heads toward the foot of the beds since either the floors or the beds sloped down towards the headboard. Room 1110. Very convenient location, ALL staff courteous and knowledgable. Stayed on pet free floor. No allergic outbreaks.",'h203');
+INSERT INTO CUST_RATING	  VALUES ('00026',3,"I recently stayed at the Nine Zero in Boston and it was a nice hotel. Never have been in Boston before finding it was a little tricky but one I arrived and valeted the vehicle the hotel was nicely decorated and the had a wine tasting going on. The hotel staff was very attentive and helpful when asked any questions about where to eat or where to explore. If I were to return to Boston I would consider Nine Zero as one of my options.",'h203');
+INSERT INTO CUST_RATING	  VALUES ('00027',4,"This is a nice, small boutique hotel that used to be my favorite in Boston, but lately it has gone downhill a bit. The staff is inconsistent, but generally helpful and kind. There is a quick wine time from 5-6pm, but the wine was so cheap I couldn't drink it. The amenities are cheaper than you'll find elsewhere...the kleenex hurt my nose it's so cheap. My room was on an alley that had garbage pickup at 4am which woke me up. Overall, I might opt for the high-rise Hyatt or Intercontinental which likely has better amenities and quiet rooms.",'h202');
+INSERT INTO CUST_RATING	  VALUES ('00028',4,"We stayed here for 1 night at the end of our 3 week trip around New England. It was in a great position within walking distance of all historic sights, Boston Common and shopping. The receptionists were all very friendly and helpful,they gave us a late checkout til 2pm which was very welcome. Wine hour between 5pm and 6pm was a nice touch. We gave stayed in a Kimpton Hotel before in Washington and would definitely stay in one again.",'h102');
+INSERT INTO CUST_RATING	  VALUES ('00029',3,"This was by far one of the best hotels when it comes to service and excellence. We were upgraded to a 600 sq. foot deck and it totally made our stay quite memorable. Room service and food was amazing!!! Centrally located in downtown Boston and close to everything we wanted to see. Thank you.",'h101');
+
+
+INSERT INTO TRANSPORT 	VALUES ('102','Bus','Bus Station 1','101');
+INSERT INTO TRANSPORT 	VALUES ('103','Train','Train Station 1','101');
+INSERT INTO TRANSPORT 	VALUES ('104','Bus','Bus Station 2','101');
+INSERT INTO TRANSPORT 	VALUES ('105','Train','Train Station 3','201');
+INSERT INTO TRANSPORT 	VALUES ('106','Train','Train Station 4','201');
+INSERT INTO TRANSPORT 	VALUES ('107','Bus','Bus Station 3','201');
+INSERT INTO TRANSPORT 	VALUES ('108','Bus','Bus Station 4','201');
+
+
+
+INSERT INTO TRAVEL_INFO 	VALUES ('101',11,30,15.00,'h101','102');
+INSERT INTO TRAVEL_INFO 	VALUES ('102',9.2,26,12.00,'h102','103');
+INSERT INTO TRAVEL_INFO 	VALUES ('103',8.3,23,11.00,'h103','104');
+INSERT INTO TRAVEL_INFO 	VALUES ('104',7.8,18,13.00,'h201','105');
+INSERT INTO TRAVEL_INFO 	VALUES ('105',6.6,15,12.00,'h202','106');
+INSERT INTO TRAVEL_INFO 	VALUES ('106',8.8,17,14.00,'h203','107');
+INSERT INTO TRAVEL_INFO 	VALUES ('107',16,34,17.45,'r101','108');
+INSERT INTO TRAVEL_INFO 	VALUES ('108',14.2,17,15.45,'r102','102');
+INSERT INTO TRAVEL_INFO 	VALUES ('109',10.3,7,9.00,'r103','103');
+INSERT INTO TRAVEL_INFO 	VALUES ('110',8,16,7.00,'r201','104');
+INSERT INTO TRAVEL_INFO 	VALUES ('111',12,21,8.00,'r202','105');
+INSERT INTO TRAVEL_INFO 	VALUES ('112',11.5,23,8.00,'r203','106');
+INSERT INTO TRAVEL_INFO 	VALUES ('113',12.7,15,12.45,'e101','107');
+INSERT INTO TRAVEL_INFO 	VALUES ('114',11.5,14,12.00,'e102','108');
+INSERT INTO TRAVEL_INFO 	VALUES ('115',9.1,11,7.45,'e103','102');
+INSERT INTO TRAVEL_INFO 	VALUES ('116',8.3,10,6.50,'e201','103');
+INSERT INTO TRAVEL_INFO 	VALUES ('117',6.6,9,5.50,'e202','104');
+INSERT INTO TRAVEL_INFO 	VALUES ('118',13.3,17,12.00,'e203','105');
+INSERT INTO TRAVEL_INFO 	VALUES ('119',5.4,12,4.00,'h101','106');
+INSERT INTO TRAVEL_INFO 	VALUES ('120',6.7,15,4.00,'h102','107');
+INSERT INTO TRAVEL_INFO 	VALUES ('121',11,22,6.00,'h103','108');
+INSERT INTO TRAVEL_INFO 	VALUES ('122',8,17,5.00,'h201','102');
+INSERT INTO TRAVEL_INFO 	VALUES ('123',9.2,19,7.50,'h202','103');
+INSERT INTO TRAVEL_INFO 	VALUES ('124',4.3,8,2.45,'h203','104');
+INSERT INTO TRAVEL_INFO 	VALUES ('125',3.3,5,3.00,'r101','105');
+INSERT INTO TRAVEL_INFO 	VALUES ('126',6.6,11,4.20,'r102','106');
+INSERT INTO TRAVEL_INFO 	VALUES ('127',12.5,22,7.00,'r103','107');
+INSERT INTO TRAVEL_INFO 	VALUES ('128',14,30,15.50,'r201','108');
+INSERT INTO TRAVEL_INFO 	VALUES ('129',1.9,4.5,2.00,'r202','102');
+INSERT INTO TRAVEL_INFO 	VALUES ('130',2.9,6,3.50,'r203','103');
+INSERT INTO TRAVEL_INFO 	VALUES ('131',10.2,19,7.00,'e101','104');
+INSERT INTO TRAVEL_INFO 	VALUES ('132',8.8,17,8.50,'e102','105');
+INSERT INTO TRAVEL_INFO 	VALUES ('133',2.7,6,4.00,'e103','106');
+INSERT INTO TRAVEL_INFO 	VALUES ('134',16,33,16.50,'e201','107');
+INSERT INTO TRAVEL_INFO 	VALUES ('135',11.1,19,15.00,'e202','108');
+INSERT INTO TRAVEL_INFO 	VALUES ('136',5.8,7,5.50,'e203','102');
+
+
+
+
+SELECT * FROM REGION;
+SELECT * FROM UNI_TYPE;
+SELECT * FROM DESTINATION;
+SELECT * FROM HOTEL;
+SELECT * FROM ENTERTAINMENT;
+SELECT * FROM RESTAURANT;
+SELECT * FROM EMERGENCY;
+SELECT * FROM CUST_RATING;
+SELECT * FROM TRANSPORT;
+SELECT * FROM TRAVEL_INFO;
+
+
+--Ending SQLite commands
+
+.output stdout
+.echo OFF
