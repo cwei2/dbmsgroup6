@@ -7,7 +7,7 @@ package com.db.travel.app.v1.constant;
 public abstract class DBConstant
 {
     //database file directory
-    public static String DATABASE_PATH = "/data/data/com.db.travel.app/databases";
+    public static String DATABASE_PATH = "/data/data/com.db.travel.app.v1/databases";
     //database file name
     public static String DATABASE_FILE = "library.db";
     //database version
