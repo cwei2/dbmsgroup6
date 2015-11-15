@@ -50,7 +50,7 @@ public class HomeActivity extends Activity implements View.OnClickListener {
     {
         int id=v.getId();
         if (id==R.id.search_btn){
-            Intent intent = new Intent(this, ListActivity.class); //Need to put the activity class of the next page
+            Intent intent = new Intent(this, SelectActivity.class); //Need to put the activity class of the next page
             this.startActivity(intent);
         }
     }
