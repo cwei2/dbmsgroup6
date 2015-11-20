@@ -23,6 +23,7 @@
     <string name="emer_name">Contact Type</string>
     <string name="emer_addr">Address</string>
     <string name="emer_contact">Contact Information</string>
+    <string name="emer_return">Return to Home Page</string>
 
 
 </resources>

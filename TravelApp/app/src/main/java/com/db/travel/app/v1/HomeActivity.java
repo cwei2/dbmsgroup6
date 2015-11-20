@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.db.travel.app.v1.constant.SQLCommand;
 import com.db.travel.app.v1.util.DBOperator;
@@ -36,6 +37,7 @@ public class HomeActivity extends Activity implements View.OnClickListener {
 
         while(cursor.moveToNext()) {
             int regId = Integer.parseInt(cursor.getString(0));
+            Toast.makeText(getBaseContext(), "Region Id is : "+regId, Toast.LENGTH_SHORT).show();
             System.out.println("Reg Id = "+regId);
         }
         int id=v.getId();
