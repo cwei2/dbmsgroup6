@@ -13,6 +13,8 @@ import android.widget.Toast;
 import com.db.travel.app.v1.constant.SQLCommand;
 import com.db.travel.app.v1.util.DBOperator;
 
+import project.db.travelapp.R;
+
 /**
  * Created by Nupurb on 20-11-2015.
  */

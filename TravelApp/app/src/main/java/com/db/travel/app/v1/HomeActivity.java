@@ -12,6 +12,8 @@ import android.widget.Toast;
 import com.db.travel.app.v1.constant.SQLCommand;
 import com.db.travel.app.v1.util.DBOperator;
 
+import project.db.travelapp.R;
+
 
 public class HomeActivity extends Activity implements View.OnClickListener {
 
